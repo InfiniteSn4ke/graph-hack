@@ -1,6 +1,18 @@
-type ExampleEntity @entity {
-  id: ID!
-  count: BigInt!
-  owner: Bytes! # address
-  spender: Bytes! # address
+enum State {
+    Added
+    Removed
 }
+
+type Minter @entity(immutable: true) {
+  id: ID!
+  account: Bytes!
+  state: State!
+}
+
+type TokenTransfer @entity(immutable: true) {
+  id: ID!
+  from: Bytes!
+  to: Bytes!
+  amount: BigInt!
+}
+

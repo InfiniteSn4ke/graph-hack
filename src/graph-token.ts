@@ -8,9 +8,10 @@ import {
   NewPendingOwnership,
   Transfer
 } from "../generated/GraphToken/GraphToken"
-import { ExampleEntity } from "../generated/schema"
+import { Minter, TokenTransfer } from "../generated/schema"
 
 export function handleApproval(event: Approval): void {
+    /*
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
   let entity = ExampleEntity.load(event.transaction.from.toHex())
@@ -64,14 +65,37 @@ export function handleApproval(event: Approval): void {
   // - contract.totalSupply(...)
   // - contract.transfer(...)
   // - contract.transferFrom(...)
+
+*/
 }
 
-export function handleMinterAdded(event: MinterAdded): void {}
+export function handleMinterAdded(event: MinterAdded): void {
+    let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+    let minter = new Minter(id);
+    minter.account = event.params.account;
+    minter.state = "Added";
+    minter.save();
+}
 
-export function handleMinterRemoved(event: MinterRemoved): void {}
+export function handleMinterRemoved(event: MinterRemoved): void {
+    let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+    let minter = new Minter(id);
+    minter.account = event.params.account;
+    minter.state = "Removed";
+    minter.save();
+}
 
-export function handleNewOwnership(event: NewOwnership): void {}
+export function handleNewOwnership(event: NewOwnership): void {
+}
 
-export function handleNewPendingOwnership(event: NewPendingOwnership): void {}
+export function handleNewPendingOwnership(event: NewPendingOwnership): void {
+}
 
-export function handleTransfer(event: Transfer): void {}
+export function handleTransfer(event: Transfer): void {
+    let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+    let xf = new TokenTransfer(id);
+    xf.from = event.params.from;
+    xf.to = event.params.to;
+    xf.amount = event.params.value;
+    xf.save();
+}
